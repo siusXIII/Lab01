@@ -10,17 +10,10 @@ class Domanda:
         self.risposte = risposte
         self.giusta = giusta
 
-def aggiungiDomanda(Domanda):
-    if Domanda.livello == "0":
-        domanda_0.append(Domanda)
-    elif Domanda.livello == "1":
-        domanda_1.append(Domanda)
-    elif Domanda.livello == "2":
-        domanda_2.append(Domanda)
-    elif Domanda.livello == "3":
-        domanda_3.append(Domanda)
-    elif Domanda.livello == "4":
-        domanda_4.append(Domanda)
+def aggiungiDomanda(domanda):
+    if domanda.livello not in dizionarioDomande:
+        dizionarioDomande[domanda.livello] = []
+    dizionarioDomande[domanda.livello].append(domanda)
 
 
 class Giocatore:
@@ -28,12 +21,7 @@ class Giocatore:
         self.nome = nome
         self.punteggio = punteggio
 
-domanda_0 =[]
-domanda_1 =[]
-domanda_2 =[]
-domanda_3 =[]
-domanda_4 =[]
-domande = [domanda_0, domanda_1, domanda_2, domanda_3, domanda_4]
+dizionarioDomande = {}
 giocatori = []
 
 
@@ -61,10 +49,12 @@ class Game:
         self.domandegioco = domandegioco
 
     def inizia(self):
+        livelli = sorted(self.domandegioco.keys())
         punteggio = 0
-        num = len(self.domandegioco)
-        for l in range(num):
-            domanda_casuale = random.choice(domande[l])
+        for livello in livelli:
+            if not self.domandegioco[livello]:
+                continue
+            domanda_casuale = random.choice(self.domandegioco[livello])
             print(f"Livello {domanda_casuale.livello}) {domanda_casuale.domanda}")
             risposta = domanda_casuale.giusta
             random.shuffle(domanda_casuale.risposte)
@@ -97,5 +87,5 @@ class Game:
 
 
 
-g = Game(domande)
+g = Game(dizionarioDomande)
 g.inizia()
